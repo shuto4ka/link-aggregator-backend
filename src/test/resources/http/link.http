@@ -1,0 +1,7 @@
+POST http://localhost:8080/graphql
+Content-Type: application/json
+
+{
+    "query":"{link(id: 6) { title, task {id, name, user {id}} } }"
+}
+###
