@@ -6,7 +6,7 @@ node {
             checkout scm
             sh "git rev-parse --short HEAD > .git/commit-id"
             commit_id = readFile('.git/commit-id').trim()
-            echo '$PATH'
+            sh '$PATH'
         }
         stage('Build & Test') {
             def gradle = docker.image('gradle:4.6-jdk9')
