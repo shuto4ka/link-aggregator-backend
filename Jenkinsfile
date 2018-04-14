@@ -38,11 +38,13 @@ node {
 //        }
 //        mysql.stop()
 //    }
-    stage('docker build/push') {
-        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-            docker.build("kozhenkov/link-aggregator-backend:${commit_id}", 'docker/').push()
+        stage('docker build/push') {
+            docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+                def image = docker.build("kozhenkov/link-aggregator-backend:${commit_id}", '-f docker/Dockerfile .')
+                image.push()
+                image.push('latest')
+            }
         }
-    }
         buildStatus = 'Successful'
     } catch (e) {
         echo e
