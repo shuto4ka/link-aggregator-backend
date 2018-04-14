@@ -11,7 +11,7 @@ node {
             def gradle = docker.image('gradle:4.6-jdk9')
             gradle.pull()
             gradle.inside() {
-                sh 'gradle -Dorg.gradle.daemon=false -x test build jar'
+                sh 'gradle -Dorg.gradle.daemon=false clean -x test build jar'
             }
 //            agent {
 //                docker {
@@ -38,13 +38,14 @@ node {
 //        }
 //        mysql.stop()
 //    }
-//    stage('docker build/push') {
-//        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-//            def app = docker.build("kozhenkov/jenkins:${commit_id}", '.').push()
-//        }
-//    }
+    stage('docker build/push') {
+        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+            docker.build("kozhenkov/link-aggregator-backend:${commit_id}", 'docker/').push()
+        }
+    }
         buildStatus = 'Successful'
     } catch (e) {
+        echo e
         buildStatus = 'Failure'
     }
 
