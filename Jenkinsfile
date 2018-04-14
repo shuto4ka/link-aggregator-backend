@@ -11,7 +11,7 @@ node {
             def gradle = docker.image('gradle:4.6-jdk9')
             gradle.pull()
             gradle.inside() {
-                sh 'gradle -Dorg.gradle.daemon=false clean -x test build jar'
+                sh 'gradle -Dorg.gradle.daemon=false clean -x test build bootJar'
             }
 //            agent {
 //                docker {
