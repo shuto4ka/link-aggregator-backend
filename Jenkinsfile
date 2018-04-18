@@ -41,8 +41,9 @@ node {
         stage('docker build/push') {
             docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
                 def image = docker.build("kozhenkov/link-aggregator-backend:${commit_id}", '-f docker/Dockerfile .')
-                image.push()
+                //image.push()
                 image.push('latest')
+                sh "docker rmi kozhenkov/link-aggregator-backend:${commit_id}"
             }
         }
         buildStatus = 'Successful'
