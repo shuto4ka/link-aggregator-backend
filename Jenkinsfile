@@ -8,36 +8,13 @@ node {
             commit_id = readFile('.git/commit-id').trim()
         }
         stage('Build & Test') {
-            def gradle = docker.image('gradle:4.6-jdk9')
+            def gradle = docker.image('gradle:4.8-jdk10')
             gradle.pull()
             gradle.inside() {
                 sh 'gradle -Dorg.gradle.daemon=false clean -x test build bootJar'
             }
-//            agent {
-//                docker {
-//                    image 'gradle:4.6-jdk9'
-//                    reuseNode true
-//                    args '-u 1000:122 -v /srv/nfs/docker/host_volumes/gradle:/home/gradle/.gradle:rw -v /var/run/docker.sock:/var/run/docker.sock:rw -v /usr/bin/docker:/usr/bin/docker:ro'
-//                }
-//            }
-//            steps {
-//                withEnv(['LC_ALL=ru_RU.UTF-8']) {
-//                    sh 'gradle -Dorg.gradle.daemon=false build test jar'
-//                }
-//            }
         }
 
-//    stage('test with a DB') {
-//        def mysql = docker.image('mysql').run("-e MYSQL_ALLOW_EMPTY_PASSWORD=yes")
-//        def myTestContainer = docker.image('node:4.6')
-//        myTestContainer.pull()
-//        myTestContainer.inside("--link ${mysql.id}:mysql") {
-//            // using linking, mysql will be available at host: mysql, port: 3306
-//            sh 'npm install --only=dev'
-//            sh 'npm test'
-//        }
-//        mysql.stop()
-//    }
         stage('docker build/push') {
             docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
                 def image = docker.build("kozhenkov/link-aggregator-backend:${commit_id}", '-f docker/Dockerfile .')
