@@ -1,6 +1,9 @@
 node {
-    def commit_id
-    def buildStatus
+    final SUCCESSFUL = 'Successful'
+    final FAILURE = 'Failure'
+
+    String commit_id
+    String buildStatus
     try {
         stage('Preparation') {
             checkout scm
@@ -23,17 +26,28 @@ node {
                 sh "docker rmi kozhenkov/link-aggregator-backend:${commit_id}"
             }
         }
-        buildStatus = 'Successful'
+        buildStatus = SUCCESSFUL
     } catch (e) {
         echo e
-        buildStatus = 'Failure'
+        buildStatus = FAILURE
     }
 
     withCredentials([string(credentialsId: 'telegram_token', variable: 'telegram_token')]) {
-        echo "Sending telegram message..."
-        def chatId = '131116969'
-        def message = java.net.URLEncoder.encode(
-                "Revision #${commit_id} - Build status: ${buildStatus}", "UTF-8")
-        httpRequest "https://api.telegram.org/bot${telegram_token}/sendMessage?chat_id=${chatId}&text=${message}"
+        sendTelegramMessage("Revision #${commit_id} - Build status: ${buildStatus}", (String) telegram_token)
+
+        if (buildStatus == SUCCESSFUL) {
+            build 'link-aggregator-deploy'
+
+            sendTelegramMessage("Revision #${commit_id} was deployed successfully", (String) telegram_token)
+        }
     }
+}
+
+void sendTelegramMessage(String text, String telegram_token) {
+    echo "Sending telegram message... - ${text}"
+
+    def chatId = '131116969'
+    def message = URLEncoder.encode(text, "UTF-8")
+
+    httpRequest "https://api.telegram.org/bot${telegram_token}/sendMessage?chat_id=${chatId}&text=${message}"
 }
