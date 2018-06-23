@@ -1,4 +1,4 @@
-FROM java:10
+FROM java:10-slim
 ADD build/libs/link-aggregator-build.jar link-aggregator-backend.jar
 ADD config/aws/application.properties application.properties
 EXPOSE 8080
