@@ -1,3 +1,5 @@
+import java.nio.file.Files
+
 buildscript {
     ext {
         springBootVersion = '2.0.3.RELEASE'
@@ -15,12 +17,22 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-
-jar {
-    baseName = 'link-aggregator'
-    version = '1.0'
-}
+version = '1.0'
 sourceCompatibility = 10
+
+bootJar {
+    setVersionInDockerfile((String) version)
+    baseName = 'link-aggregator-backend'
+}
+
+private static void setVersionInDockerfile(String version) {
+    File file = new File('docker/Dockerfile')
+    Collection<String> modifiedLines = Files.readAllLines(file.toPath()).stream()
+            .map { line -> line.replaceAll('VERSION', version) }
+            .collect()
+
+    Files.write(file.toPath(), modifiedLines)
+}
 
 repositories {
     mavenCentral()
@@ -47,6 +59,4 @@ dependencies {
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "org.testcontainers:testcontainers:1.8.0"
     testCompile "org.testcontainers:postgresql:1.8.0"
-
-
 }
