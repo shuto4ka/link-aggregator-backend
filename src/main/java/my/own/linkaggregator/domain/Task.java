@@ -1,9 +1,6 @@
 package my.own.linkaggregator.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,6 +29,7 @@ public class Task {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Singular
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = CascadeType.REMOVE)
     @OrderBy("id")
     private List<Link> links;

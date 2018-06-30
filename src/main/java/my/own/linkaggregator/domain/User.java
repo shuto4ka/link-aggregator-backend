@@ -32,6 +32,7 @@ public class User {
     @NotBlank
     private String password;
 
+    @Singular
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     @OrderBy("id")
     private List<Task> tasks;

@@ -29,7 +29,7 @@ public class GraphQLController {
     private final GraphQL graphQL;
 
     @Autowired
-    public GraphQLController(LinkGraph linkGraph, UserGraph userGraph/*, ProductGraph productQuery*/) {
+    public GraphQLController(LinkGraph linkGraph, TaskGraph taskGraph, UserGraph userGraph) {
         GraphQLSchema schema = new GraphQLSchemaGenerator()
                 .withResolverBuilders(
                         new BeanResolverBuilder("my.own.linkaggregator.domain"),
@@ -39,7 +39,7 @@ public class GraphQLController {
                         new PublicResolverBuilder("my.own.linkaggregator.web.graphql.spqr"))
                 .withOperationsFromSingleton(userGraph)
                 .withOperationsFromSingleton(linkGraph)
-//                .withOperationsFromSingleton(productQuery)
+                .withOperationsFromSingleton(taskGraph)
                 .withValueMapperFactory(new JacksonValueMapperFactory())
                 .generate();
 

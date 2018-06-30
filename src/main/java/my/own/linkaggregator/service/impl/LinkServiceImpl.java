@@ -1,37 +1,46 @@
-package my.own.linkaggregator.service;
+package my.own.linkaggregator.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import my.own.linkaggregator.domain.Link;
 import my.own.linkaggregator.repository.LinkRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import my.own.linkaggregator.service.LinkService;
+import my.own.linkaggregator.utils.exception.NotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-@Component
+@Slf4j
+@Service
+@RequiredArgsConstructor
 public class LinkServiceImpl implements LinkService {
 
     private final LinkRepository linkRepository;
 
-    @Autowired
-    public LinkServiceImpl(LinkRepository linkRepository) {
-        this.linkRepository = linkRepository;
-    }
-
+    @Override
+    @Transactional(readOnly = true)
     public Link get(Long linkId) {
-        return linkRepository.findById(linkId).orElse(null);
+        return linkRepository
+                .findById(linkId)
+                .orElseThrow(() -> new NotFoundException("Link not found with id=" + linkId));
     }
 
+    @Override
+    @Transactional
     public Link add(Link link) {
         Assert.isNull(link.getId(), "Link Id must be null");
         return linkRepository.save(link);
     }
 
     @Override
+    @Transactional
     public Link update(Link link) {
         Assert.notNull(link.getId(), "Link Id must not be null");
         return linkRepository.save(link);
     }
 
     @Override
+    @Transactional
     public void delete(long linkId) {
         linkRepository.deleteById(linkId);
     }
