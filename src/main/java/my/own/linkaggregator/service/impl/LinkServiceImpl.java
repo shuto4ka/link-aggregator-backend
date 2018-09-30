@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,12 @@ public class LinkServiceImpl implements LinkService {
     public Link add(Link link) {
         Assert.isNull(link.getId(), "Link Id must be null");
         return linkRepository.save(link);
+    }
+
+    @Override
+    @Transactional
+    public void addAll(List<Link> links) {
+        linkRepository.saveAll(links);
     }
 
     @Override

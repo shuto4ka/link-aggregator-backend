@@ -1,5 +1,6 @@
 package my.own.linkaggregator.service;
 
+import my.own.linkaggregator.AbstractIntegrationTest;
 import my.own.linkaggregator.domain.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static my.own.linkaggregator.TestData.USER_1;
 import static org.junit.Assert.assertEquals;
 
-public class UserServiceImplTest extends AbstactDbTest {
+public class UserServiceImplTest extends AbstractIntegrationTest {
     @Autowired
     UserService userService;
 

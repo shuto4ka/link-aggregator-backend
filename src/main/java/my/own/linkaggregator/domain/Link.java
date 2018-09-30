@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "link")
@@ -15,26 +17,32 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Link {
+public class Link implements Persistable<Long> {
 
     @Id
-    @SequenceGenerator(name = "link_id_seq", sequenceName = "link_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "link_id_seq")
+    @GenericGenerator(
+            name = "link_generator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "link_id_seq"),
+                    @Parameter(name = "increment_size", value = "30"),
+                    @Parameter(name = "optimizer", value = "pooled-lo")
+            }
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "link_generator")
     @Access(value = AccessType.PROPERTY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id", referencedColumnName = "id", nullable = false)
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
 
-    @Column(nullable = false)
     private String value;
-
-    @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
     private boolean done;
 
+    @Override
+    public boolean isNew() {
+        return id == null;
+    }
 }

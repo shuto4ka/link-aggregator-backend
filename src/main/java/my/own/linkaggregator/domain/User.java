@@ -1,10 +1,9 @@
 package my.own.linkaggregator.domain;
 
-import io.leangen.graphql.annotations.GraphQLQuery;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -15,32 +14,43 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "tasks")
-public class User {
+@EqualsAndHashCode(of = "id")
+public class User /*implements UserDetails */{
 
     @Id
-    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
     @Access(value = AccessType.PROPERTY)
     private Long id;
 
-    @Column(name = "username", nullable = false)
-    @NotBlank
     private String username;
-
-    @Column(name = "password", nullable = false)
-    @NotBlank
     private String password;
 
     @Singular
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OrderBy("id")
+    @BatchSize(size = 100)
     private List<Task> tasks;
 
+//    @Column(name = "authorities", columnDefinition = "text[]")
+//    @Convert(converter = AuthoritiesToArrayConverter.class)
+//    private List<Authority> authorities;
 
-    //Removing password from graph
-    @GraphQLQuery(name = "password")
-    public String getPasswordForGraphQL() {
-        return null;
-    }
+    private boolean enabled;
+
+
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return false;
+//    }
 }
