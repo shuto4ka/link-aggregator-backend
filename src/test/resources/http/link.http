@@ -5,3 +5,7 @@ Content-Type: application/json
     "query":"{link(id: 6) { title, task {id, name, user {id}} } }"
 }
 ###
+
+POST http://localhost:8080/actuator/refresh
+
+###
