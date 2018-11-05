@@ -5,6 +5,6 @@ import my.own.linkaggregator.domain.User;
 public class AuthorizedUser {
     public static final User user = new User();
     static {
-        user.setId(1L);
+        user.setId("1");
     }
 }

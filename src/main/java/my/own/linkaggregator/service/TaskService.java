@@ -4,11 +4,9 @@ import my.own.linkaggregator.domain.Task;
 
 public interface TaskService {
 
-    Task add(Task task);
+    Task save(Task task);
 
-    Task get(Long taskId);
+    Task get(String taskId);
 
-    Task update(Task task);
-
-    void delete(long taskId);
+    void delete(String taskId);
 }

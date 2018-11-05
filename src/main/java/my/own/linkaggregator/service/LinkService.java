@@ -1,18 +1,11 @@
 package my.own.linkaggregator.service;
 
 import my.own.linkaggregator.domain.Link;
-
-import java.util.List;
+import org.bson.types.ObjectId;
 
 public interface LinkService {
 
-    Link add(Link link);
+    Link save(Link link);
 
-    Link get(Long linkId);
-
-    void addAll(List<Link> links);
-
-    Link update(Link link);
-
-    void delete(long linkId);
+    void delete(ObjectId linkId);
 }
