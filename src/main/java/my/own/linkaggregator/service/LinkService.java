@@ -5,7 +5,8 @@ import org.bson.types.ObjectId;
 
 public interface LinkService {
 
-    Link save(Link link);
+    Link add(String taskId, Link link);
+    Link update(Link link);
 
-    void delete(ObjectId linkId);
+    void markAsDeleted(ObjectId linkId);
 }

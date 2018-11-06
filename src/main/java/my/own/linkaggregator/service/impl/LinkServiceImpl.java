@@ -7,6 +7,7 @@ import my.own.linkaggregator.repository.TaskRepository;
 import my.own.linkaggregator.service.LinkService;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 @Slf4j
 @Service
@@ -16,15 +17,21 @@ public class LinkServiceImpl implements LinkService {
     private final TaskRepository taskRepository;
 
     @Override
-    public Link save(Link link) {
-//        Assert.isNull(link.getId(), "Link Id must be null");
-//        return linkRepository.save(link);
-        throw new UnsupportedOperationException();
+    public Link add(String taskId, Link link) {
+        Assert.isNull(link.getId(), "Link id must be null");
+        taskRepository.addLink(taskId, link);
+        return link;
     }
 
     @Override
-    public void delete(ObjectId linkId) {
-//        linkRepository.deleteById(linkId);
-        throw new UnsupportedOperationException();
+    public Link update(Link link) {
+        Assert.notNull(link.getId(), "Link id must not be null");
+        taskRepository.updateLink(link);
+        return link;
+    }
+
+    @Override
+    public void markAsDeleted(ObjectId linkId) {
+        taskRepository.markLinkAsDeletedById(linkId);
     }
 }

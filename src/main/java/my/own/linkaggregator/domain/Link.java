@@ -13,9 +13,10 @@ import org.bson.types.ObjectId;
 public class Link {
 
     private ObjectId id;
-    private String taskId;
 
     private String value;
     private String title;
     private boolean done;
+
+    private boolean deleted;
 }
