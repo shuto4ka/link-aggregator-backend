@@ -4,21 +4,20 @@ import my.own.linkaggregator.domain.Link;
 import my.own.linkaggregator.domain.Task;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 @Repository
 public interface TaskRepository {
 
-    void markLinkAsDeletedById(ObjectId linkId);
+    Mono<Void> markLinkAsDeletedById(ObjectId linkId);
 
-    Task save(Task task);
+    Mono<Task> save(Task task);
 
-    Optional<Task> findById(String id);
+    Mono<Task> findById(String id);
 
-    void deleteById(String taskId);
+    Mono<Void> deleteById(String taskId);
 
-    void addLink(String taskId, Link link);
+    Mono<Link> addLink(String taskId, Link link);
 
-    void updateLink(Link link);
+    Mono<Link> updateLink(Link link);
 }

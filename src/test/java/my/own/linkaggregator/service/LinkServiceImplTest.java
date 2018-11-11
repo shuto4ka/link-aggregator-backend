@@ -24,9 +24,9 @@ public class LinkServiceImplTest extends AbstractIntegrationTest {
     public void markAsDeleted() {
         Task task = saveTaskWith2Links();
 
-        linkService.markAsDeleted(task.getLinks().get(0).getId());
+        linkService.markAsDeleted(task.getLinks().get(0).getId()).block();
 
-        task = taskRepository.findById(task.getId()).orElseThrow();
+        task = taskRepository.findById(task.getId()).block();
 
         assertThat(task.getLinks().get(0).isDeleted()).isTrue();
         assertThat(task.getLinks().get(1).isDeleted()).isFalse();
@@ -35,9 +35,9 @@ public class LinkServiceImplTest extends AbstractIntegrationTest {
     @Test
     public void addLink() {
         Task task = saveTaskWith2Links();
-        linkService.add(task.getId(), Link.builder().title("3").build());
+        linkService.add(task.getId(), Link.builder().title("3").build()).block();
 
-        task = taskRepository.findById(task.getId()).orElseThrow();
+        task = taskRepository.findById(task.getId()).block();
 
         assertThat(task.getLinks()).hasSize(3);
     }
@@ -46,20 +46,20 @@ public class LinkServiceImplTest extends AbstractIntegrationTest {
     public void updateLink() {
         Task task = saveTaskWith2Links();
         task.getLinks().get(0).setTitle("update");
-        linkService.update(task.getLinks().get(0));
+        linkService.update(task.getLinks().get(0)).block();
 
-        Task updatedTask = taskRepository.findById(task.getId()).orElseThrow();
+        Task updatedTask = taskRepository.findById(task.getId()).block();
 
         assertThat(task.getLinks()).isEqualTo(updatedTask.getLinks());
     }
 
     private Task saveTaskWith2Links() {
-        Task task = taskRepository.save(Task.builder().build());
+        Task task = taskRepository.save(Task.builder().build()).block();
         task.setLinks(List.of(
                 Link.builder().id(ObjectId.get()).title("1").build(),
                 Link.builder().id(ObjectId.get()).title("2").build()));
-        taskRepository.addLink(task.getId(), task.getLinks().get(0));
-        taskRepository.addLink(task.getId(), task.getLinks().get(1));
+        taskRepository.addLink(task.getId(), task.getLinks().get(0)).block();
+        taskRepository.addLink(task.getId(), task.getLinks().get(1)).block();
 
         return task;
     }

@@ -2,11 +2,12 @@ package my.own.linkaggregator.service;
 
 import my.own.linkaggregator.domain.Link;
 import org.bson.types.ObjectId;
+import reactor.core.publisher.Mono;
 
 public interface LinkService {
 
-    Link add(String taskId, Link link);
-    Link update(Link link);
+    Mono<Link> add(String taskId, Link link);
+    Mono<Link> update(Link link);
 
-    void markAsDeleted(ObjectId linkId);
+    Mono<Void> markAsDeleted(ObjectId linkId);
 }

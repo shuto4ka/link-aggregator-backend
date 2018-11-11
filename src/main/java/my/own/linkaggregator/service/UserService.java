@@ -1,9 +1,10 @@
 package my.own.linkaggregator.service;
 
 import my.own.linkaggregator.domain.User;
+import reactor.core.publisher.Mono;
 
 public interface UserService {
-    User save(User user);
+    Mono<User> save(User user);
 
-    User get(String userId);
+    Mono<User> get(String userId);
 }
